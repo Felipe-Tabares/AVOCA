@@ -135,8 +135,70 @@ animate();
 
 // Lógica del botón
 const chooseHouseBtn = document.getElementById('chooseHouseBtn');
-chooseHouseBtn.addEventListener('click', () => {
-    // Aquí redirigirías a la sección de votación
-    alert('Redirigiendo a la sección de votación (aún no implementada)');
-    // window.location.href = '/voting.html'; // Ejemplo de redirección
+if (chooseHouseBtn) {
+    chooseHouseBtn.addEventListener('click', () => {
+        // Aquí redirigirías a la sección de votación
+        alert('Redirigiendo a la sección de votación (aún no implementada)');
+        // window.location.href = '/voting.html'; // Ejemplo de redirección
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Smooth scroll para los enlaces de navegación
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href');
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+              targetElement.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'start'
+              });
+          }
+      });
+  });
+
+  // Animación de aparición para las cards al hacer scroll
+  const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+  };
+
+  const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+          if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+          }
+      });
+  }, observerOptions);
+
+  // Observar todas las cards
+  document.querySelectorAll('.card, .objective-card, .tech-card, .feature-item, .solution-item').forEach(card => {
+      observer.observe(card);
+  });
+
+  // Añadir clase 'active' al enlace de navegación actual
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.main-nav a');
+
+  window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.clientHeight;
+          if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+              current = section.getAttribute('id');
+          }
+      });
+
+      navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href').slice(1) === current) {
+              link.classList.add('active');
+          }
+      });
+  });
 }); 
